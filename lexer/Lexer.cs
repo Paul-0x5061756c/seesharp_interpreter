@@ -6,7 +6,7 @@ public class Lexer
   int Position;
 
   int ReadPosition;
-  char ch;
+  char Ch;
 
   public Lexer(string input)
   {
@@ -16,7 +16,20 @@ public class Lexer
   }
   public Token NextToken()
   {
-    Token token = ch switch
+    SkipWhitespace();
+
+    if (char.IsAsciiDigit(Ch))
+    {
+      return new Token(TokenType.Int, ReadNumber());
+    }
+
+    if (char.IsAsciiLetter(Ch))
+    {
+      string ident = ReadIdentifier();
+      return new Token(LookUpIdent(ident), ident);
+    }
+
+    Token token = Ch switch
     {
       '=' => new Token(TokenType.Assign, "="),
       ';' => new Token(TokenType.Semicolon, ";"),
@@ -27,17 +40,46 @@ public class Lexer
       '{' => new Token(TokenType.LBrace, "{"),
       '}' => new Token(TokenType.RBrace, "}"),
       '\0' => new Token(TokenType.Eof, ""),
-      _ => char.IsAsciiLetter(ch) ? new Token(TokenType.Ident, ReadIdentifier()) : new Token(TokenType.Illegal, ch.ToString())
+      _ => throw new System.NotImplementedException()
     };
 
     ReadChar();
     return token;
   }
 
-  public string ReadIdentifier()
+  private void SkipWhitespace()
+  {
+    while (char.IsWhiteSpace(Ch))
+    {
+      ReadChar();
+    }
+  }
+
+
+  private TokenType LookUpIdent(string ident)
+  {
+    return ident switch
+    {
+      "fn" => TokenType.Function,
+      "let" => TokenType.Let,
+      _ => TokenType.Ident
+    };
+  }
+
+  private string ReadNumber()
   {
     int position = Position;
-    while (char.IsLetter(ch))
+    while (char.IsAsciiDigit(Ch))
+    {
+      ReadChar();
+    }
+    return Input[position..Position];
+  }
+
+  private string ReadIdentifier()
+  {
+    int position = Position;
+    while (char.IsAsciiLetter(Ch))
     {
       ReadChar();
     }
@@ -46,7 +88,7 @@ public class Lexer
 
   private void ReadChar()
   {
-    ch = (ReadPosition >= Input.Length) ? '\0' : Input[ReadPosition];
+    Ch = (ReadPosition >= Input.Length) ? '\0' : Input[ReadPosition];
     Position = ReadPosition;
     ReadPosition += 1;
   }
