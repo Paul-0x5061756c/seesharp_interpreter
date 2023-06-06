@@ -14,6 +14,21 @@ public enum TokenType
   LBrace,
   RBrace,
   Function,
-  Let
+  Let,
 
+  Minus,
+  Bang,
+  Asterisk,
+  Slash,
+  Lt,
+  Gt,
+  Return,
+  True,
+  Else,
+  False,
+  If,
+  Eq,
+  NotEq,
 }
+
+

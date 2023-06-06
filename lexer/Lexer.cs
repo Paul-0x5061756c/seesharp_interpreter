@@ -1,5 +1,4 @@
 namespace seeharp_interpreter.lexer;
-
 public class Lexer
 {
   string Input;
@@ -12,40 +11,42 @@ public class Lexer
   {
     Input = input;
     ReadChar();
-
   }
   public Token NextToken()
   {
     SkipWhitespace();
 
-    if (char.IsAsciiDigit(Ch))
-    {
-      return new Token(TokenType.Int, ReadNumber());
-    }
-
-    if (char.IsAsciiLetter(Ch))
+    if (char.IsAsciiDigit(Ch)) return new(TokenType.Int, ReadNumber());
+    else if (char.IsAsciiLetter(Ch))
     {
       string ident = ReadIdentifier();
       return new Token(LookUpIdent(ident), ident);
     }
-
-    Token token = Ch switch
+    else if (IsDoubleCharToken()) return ReadDoubleCharToken();
+    else
     {
-      '=' => new Token(TokenType.Assign, "="),
-      ';' => new Token(TokenType.Semicolon, ";"),
-      '(' => new Token(TokenType.LParen, "("),
-      ')' => new Token(TokenType.RParen, ")"),
-      ',' => new Token(TokenType.Comma, ","),
-      '+' => new Token(TokenType.Plus, "+"),
-      '{' => new Token(TokenType.LBrace, "{"),
-      '}' => new Token(TokenType.RBrace, "}"),
-      '\0' => new Token(TokenType.Eof, ""),
-      _ => throw new System.NotImplementedException()
-    };
 
-    ReadChar();
-    return token;
+      Token token = GetSingleCharToken();
+      ReadChar();
+      return token;
+    }
   }
+
+  private bool IsDoubleCharToken() => (Ch == '=' && PeekChar() == '=') || (Ch == '!' && PeekChar() == '=');
+
+
+  private Token ReadDoubleCharToken()
+  {
+    char ch = Ch;
+    ReadChar();
+    string literal = ch.ToString() + Ch.ToString();
+    ReadChar();
+
+    return ch == '=' ? new(TokenType.Eq, literal) : new(TokenType.NotEq, literal);
+  }
+
+  private TokenType LookUpIdent(string ident) => TokenMap.TokenIdentMap.TryGetValue(ident, out Token foundToken) ? foundToken.Type : TokenType.Ident;
+  private Token GetSingleCharToken() => TokenMap.TokenCharMap.TryGetValue(Ch, out Token foundToken) ? foundToken : throw new System.NotImplementedException("Unknown token");
 
   private void SkipWhitespace()
   {
@@ -55,16 +56,6 @@ public class Lexer
     }
   }
 
-
-  private TokenType LookUpIdent(string ident)
-  {
-    return ident switch
-    {
-      "fn" => TokenType.Function,
-      "let" => TokenType.Let,
-      _ => TokenType.Ident
-    };
-  }
 
   private string ReadNumber()
   {
@@ -85,11 +76,12 @@ public class Lexer
     }
     return Input[position..Position];
   }
-
   private void ReadChar()
   {
     Ch = (ReadPosition >= Input.Length) ? '\0' : Input[ReadPosition];
     Position = ReadPosition;
     ReadPosition += 1;
   }
+
+  private char PeekChar() => (ReadPosition >= Input.Length) ? '\0' : Input[ReadPosition];
 }
