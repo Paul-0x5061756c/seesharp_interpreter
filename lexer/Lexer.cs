@@ -46,7 +46,7 @@ public class Lexer
   }
 
   private TokenType LookUpIdent(string ident) => TokenMap.TokenIdentMap.TryGetValue(ident, out Token foundToken) ? foundToken.Type : TokenType.Ident;
-  private Token GetSingleCharToken() => TokenMap.TokenCharMap.TryGetValue(Ch, out Token foundToken) ? foundToken : throw new System.NotImplementedException("Unknown token");
+  private Token GetSingleCharToken() => TokenMap.TokenCharMap.TryGetValue(Ch, out Token foundToken) ? foundToken : new(TokenType.Illegal, Ch.ToString());
 
   private void SkipWhitespace()
   {
