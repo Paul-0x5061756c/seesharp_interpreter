@@ -29,8 +29,10 @@ public class Parser
 
   public Program ParseProgram()
   {
-    var program = new Program();
-    program.Statements = new List<IStatement>();
+    var program = new Program
+    {
+      Statements = new List<IStatement>()
+    };
 
     while (CurrentToken.Type != TokenType.Eof)
     {
@@ -79,7 +81,10 @@ public class Parser
       return null;
     }
 
-    stmt.Name = new Identifier { Token = CurrentToken, Value = CurrentToken.Literal };
+    if (CurrentToken.Literal is not null)
+    {
+      stmt.Name = new Identifier { Token = CurrentToken, Value = CurrentToken.Literal };
+    }
 
     if (!ExpectPeek(TokenType.Assign))
     {

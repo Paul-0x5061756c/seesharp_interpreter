@@ -40,7 +40,7 @@ public class ParserTests
     }
   }
 
-  private bool TestLetStatement(IStatement stmt, string name)
+  private static bool TestLetStatement(IStatement stmt, string name)
   {
     Assert.Equal(TokenType.Let, stmt.Token.Type);
     var letStmt = (LetStatement)stmt;
@@ -49,7 +49,7 @@ public class ParserTests
     return true;
   }
 
-  private void CheckParserErrors(Parser parser)
+  private static void CheckParserErrors(Parser parser)
   {
     var errors = parser.Errors;
     if (errors.Count == 0) return;
@@ -85,4 +85,26 @@ public class ParserTests
 
   }
 
+  [Fact]
+  public void TestString()
+  {
+    var Program = new Program()
+    {
+      Statements = new(){
+        new LetStatement(){
+          Token = new(TokenType.Let, "let"),
+          Name = new(){
+            Token = new(TokenType.Ident, "myVar"),
+            Value = "myVar"
+          },
+          Value = new(){
+            Token = new(TokenType.Ident, "anotherVar"),
+            Value = "anotherVar"
+          }
+        }
+      }
+    };
+
+    Assert.Equal("let myVar = anotherVar;", Program.ToString());
+  }
 }

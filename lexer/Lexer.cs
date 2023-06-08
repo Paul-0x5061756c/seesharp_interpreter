@@ -1,7 +1,7 @@
 namespace seeharp_interpreter.lexer;
 public class Lexer
 {
-  string Input;
+  readonly string Input;
   int Position;
 
   int ReadPosition;
@@ -39,7 +39,7 @@ public class Lexer
   {
     char ch = Ch;
     ReadChar();
-    string literal = ch.ToString() + Ch.ToString();
+    string literal = $"{ch}{Ch}";
     ReadChar();
 
     return ch == '=' ? new(TokenType.Eq, literal) : new(TokenType.NotEq, literal);

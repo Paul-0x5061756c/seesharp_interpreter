@@ -9,7 +9,6 @@ public interface IStatement : INode
 {
 
   Token Token { get; set; }
-  Identifier Name { get; set; }
-
+  Identifier? Name { get; set; }
 
 }

@@ -11,4 +11,8 @@ public class Expression : IExpression
   {
     throw new NotImplementedException();
   }
+  override public string ToString()
+  {
+    throw new NotImplementedException();
+  }
 }

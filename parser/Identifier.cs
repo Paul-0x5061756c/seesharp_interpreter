@@ -12,4 +12,6 @@ public class Identifier : INode
   public string Value { get; set; } = string.Empty;
 
   public string TokenLiteral() => Token.Literal ?? string.Empty;
+
+  public override string ToString() => Value;
 }

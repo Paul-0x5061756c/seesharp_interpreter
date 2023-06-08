@@ -7,4 +7,5 @@ namespace seeharp_interpreter.parser.Interfaces;
 public interface INode
 {
   string TokenLiteral();
+  string ToString();
 }

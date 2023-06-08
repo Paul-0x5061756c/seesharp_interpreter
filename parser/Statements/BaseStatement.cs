@@ -6,12 +6,12 @@ using seeharp_interpreter.lexer;
 using seeharp_interpreter.parser.Interfaces;
 
 namespace seeharp_interpreter.parser.Statements;
-public class BaseStatement : IStatement
+public abstract class BaseStatement : IStatement
 {
   public Token Token { get; set; }
-  public Identifier Name { get; set; } = new();
-
-  public Expression? Value { get; set; }
+  public Identifier? Name { get; set; } = new();
+  public Identifier Value { get; set; } = new();
   public string TokenLiteral() => Token.Literal ?? string.Empty;
 
+  public abstract override string ToString();
 }
