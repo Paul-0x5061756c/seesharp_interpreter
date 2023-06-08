@@ -107,4 +107,22 @@ public class ParserTests
 
     Assert.Equal("let myVar = anotherVar;", Program.ToString());
   }
+
+  [Fact]
+  public void TestIdentifierExpression()
+  {
+    var input = "foobar;";
+
+    var lexer = new Lexer(input);
+    var parser = new Parser(lexer);
+
+    var program = parser.ParseProgram();
+    Assert.NotNull(program);
+    Assert.Single(program.Statements);
+    CheckParserErrors(parser);
+
+    var stmt = program.Statements[0];
+    Assert.Equal(TokenType.Ident, stmt.Token.Type);
+    Assert.Equal("foobar", stmt.Token.Literal);
+  }
 }

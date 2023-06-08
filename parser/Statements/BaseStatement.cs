@@ -11,6 +11,8 @@ public abstract class BaseStatement : IStatement
   public Token Token { get; set; }
   public Identifier? Name { get; set; } = new();
   public Identifier Value { get; set; } = new();
+
+  public Expression? Expression { get; set; }
   public string TokenLiteral() => Token.Literal ?? string.Empty;
 
   public abstract override string ToString();

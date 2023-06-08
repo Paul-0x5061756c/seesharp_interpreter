@@ -6,4 +6,5 @@ using System.Threading.Tasks;
 namespace seeharp_interpreter.parser.Interfaces;
 public interface IExpression : INode
 {
+
 }
