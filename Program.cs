@@ -1,16 +1,18 @@
-﻿using seeharp_interpreter.lexer;
+﻿using System.Text;
+using seeharp_interpreter.lexer;
+using seeharp_interpreter.parser;
+using seeharp_interpreter.parser.Interfaces;
 
-while (true)
+namespace seeharp_interpreter;
+public class Program : INode
 {
-  var input = Console.ReadLine();
-  var lexer = new Lexer(input);
-  while (true)
+  public List<IStatement> Statements { get; set; } = new();
+  public static void Main()
   {
-    var token = lexer.NextToken();
-    if (token.Type == TokenType.Eof)
-    {
-      break;
-    }
-    Console.WriteLine(token.Type + " " + token.Literal);
+    Repl.Start();
   }
+
+  public string TokenLiteral() => Statements.Count > 0 ? Statements[0].TokenLiteral() : "";
+
+  public override string ToString() => string.Join("\n", Statements.Select(s => s.ToString()));
 }
